@@ -52,6 +52,7 @@ function emailCpfExiste (req, res, next) {
     }
     next();
 }
+
 module.exports ={
     validarSenha,
     verificarCampos,

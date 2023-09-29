@@ -30,12 +30,16 @@ const atualizarUsuario = async (req, res) => {
     const { nome, cpf, data_nascimento, telefone, email, senha } = req.body;
 
     if (!numeroConta) {
-        return res.status(400).json({ mensagem: 'Numero da conta inválido.' });
+        return res.status(400).json({ mensagem: 'Número da conta inválido.' });
     }
 
     const contaExistente = contas.find((conta) => {
-        conta.numero === Number(numeroConta);
+        return conta.numero === Number(numeroConta);
     });
+
+    if (!contaExistente) {
+        return res.status(404).json({ mensagem: 'Conta não encontrada' });
+    }
 
     contaExistente.nome = nome;
     contaExistente.cpf = cpf;
@@ -55,29 +59,21 @@ const excluirConta = async (req, res) => {
     });
 
     if (!conta) {
-        return res.status(404).json({ mensagem: 'Número da conta não encontrado' });
+        return res.status(404).json({ mensagem: 'Conta não encontrada' });
     }
 
-    if (conta !== 0) {
+    if (conta.saldo !== 0) {
         return res.status(400).json({ mensagem: 'A conta só pode ser removida se o saldo for zero!' });
     }
+
+    const index = contas.indexOf(conta);
+    contas.splice(index, 1);
+
     return res.status(204).send();
 }
 
-const depositar = async (req, res) => {
-
-}
-
-const sacar = async (req, res) => {
-
-}
-
-const transferir = async (req, res) => {
-
-}
-
 const saldo = async (req, res) => {
-
+    
 }
 
 const extrato = async (req, res) => {
@@ -89,9 +85,6 @@ module.exports = {
     criarConta,
     atualizarUsuario,
     excluirConta,
-    depositar,
-    sacar,
-    transferir,
     saldo,
     extrato
 }
