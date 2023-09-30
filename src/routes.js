@@ -1,6 +1,6 @@
 const express = require('express');
 const { listarContas, criarConta, atualizarUsuario, excluirConta, saldo, extrato } = require('./controller/contas');
-const { validarSenha, verificarCampos, emailCpfExiste } = require('./intermediadores');
+const { validarSenha, verificarCampos, emailCpfExiste, verificarNumeroConta, verificarConta, verificarNumero_conta, verificarSenha } = require('./intermediadores');
 const { depositar, sacar, transferir } = require('./controller/transacoes');
 
 const rotas = express();
@@ -10,14 +10,14 @@ rotas.get('/contas', validarSenha, listarContas);
 //http://localhost:3000/contas
 rotas.post('/contas', verificarCampos, emailCpfExiste, criarConta);
 //http:/localhost:3000/contas/:numeroConta/usuario
-rotas.put('/contas/:numeroConta/usuario', verificarCampos, emailCpfExiste, atualizarUsuario);
+rotas.put('/contas/:numeroConta/usuario', verificarCampos, emailCpfExiste, verificarNumeroConta, verificarConta, atualizarUsuario);
 //http://localhost:3000/:numeroConta
-rotas.delete('/contas/:numeroConta', excluirConta);
+rotas.delete('/contas/:numeroConta',verificarConta, excluirConta);
 
 //http://localhost:3000/contas/saldo/numero_conta
-rotas.get('/contas/saldo?numero_conta', saldo);
+rotas.get('/contas/saldo', verificarNumero_conta, verificarSenha, saldo);
 //http://localhost:3000/contas/extrato?numero_conta
-rotas.get('/contas/extrato?numero_conta', extrato);
+rotas.get('/contas/extrato',verificarNumero_conta, verificarSenha, extrato);
 
 //http://localhost:3000/transacoes/depositar
 rotas.post('/transacoes/depositar', depositar);

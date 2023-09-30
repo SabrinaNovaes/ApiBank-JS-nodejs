@@ -6,7 +6,6 @@ const validarSenha = (req, res, next) => {
     if (senha_banco !== "Cubos123Bank") {
         return res.status(401).json({ mensagem: "A senha do banco informada é inválida!" });
     }
-
     next();
 }
 
@@ -17,7 +16,7 @@ function verificarCampos (req, res, next) {
         return res.status(400).json({ mensagem: 'O nome é obrigatório.' });
     }
 
-    if (!cpf) {
+    if (!cpf || cpf.length !== 11) {
         return res.status(400).json({ mensagem: 'O cpf é obrigatorio.' });
     }
 
@@ -53,8 +52,58 @@ function emailCpfExiste (req, res, next) {
     next();
 }
 
+function verificarNumeroConta (req, res, next) {
+    const { numeroConta } = req.params;
+
+    if (!numeroConta) {
+        return res.status(400).json({ mensagem: 'Número da conta inválido.' });
+    }
+    next();
+}
+
+function verificarConta (req, res, next) {
+    const { numeroConta } = req.params;
+    const conta = contas.find((conta) => {
+        return conta.numero === Number(numeroConta);
+    });
+
+    if (!conta) {
+        return res.status(404).json({ mensagem: 'Conta bancaria não encontrada!' });
+    }
+    next();
+}
+
+function verificarNumero_conta (req, res, next) {
+    const { numero_conta } = req.query;
+
+    if (!numero_conta) {
+        return res.status(400).json({ mensagem: 'O número da conta é obrigatórios!' });
+    }
+    next();
+}
+
+function verificarSenha (req, res, next) {
+    const { numero_conta, senha } = req.query;
+    const conta = contas.find((conta) => {
+        return conta.numero === Number(numero_conta);
+    });
+
+    if (!senha) {
+        return res.status(400).json({ mensagem: 'A senha da conta é obrigatórios!' });
+    }
+
+    if (conta.senha !== senha) {
+        return res.status(401).json({ mensagem: "Senha incorreta!" });
+    }
+    next();
+}
+
 module.exports ={
     validarSenha,
     verificarCampos,
-    emailCpfExiste
+    emailCpfExiste,
+    verificarNumeroConta,
+    verificarConta,
+    verificarNumero_conta,
+    verificarSenha
 }

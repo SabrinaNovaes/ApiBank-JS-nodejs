@@ -1,4 +1,4 @@
-const { contas } = require('../bancodedados');
+const { contas, depositos, saques, transferencias } = require('../bancodedados');
 
 const depositar = async (req, res) => {
     const { numero_conta, valor } = req.body;
@@ -23,6 +23,7 @@ const depositar = async (req, res) => {
         numero_conta,
         valor
     };
+    depositos.push(deposito);
 
     conta.saldo += valor;
 
@@ -47,12 +48,18 @@ const sacar = async (req, res) => {
         return res.status(400).json({ mensagem: 'O valor não pode ser menor que zero!' });
     }
 
+    if (conta.senha !== senha) {
+        return res.status(401).json({ mensagem: "Senha inválida!" });
+    }
+
     const saque = {
         data: new Date().toLocaleString("pt-BR").replaceAll('/', '-'),
         numero_conta,
         valor,
         senha
     };
+
+    saques.push(saque);
 
     conta.saldo -= valor;
 
@@ -61,43 +68,45 @@ const sacar = async (req, res) => {
 
 const transferir = async (req, res) => {
     const { numero_conta_origem, numero_conta_destino, valor, senha } = req.body;
+
     const contaOrigem = contas.find((conta) => {
         return conta.numero === Number(numero_conta_origem);
     });
+
     const contaDestino = contas.find((conta) => {
         return conta.numero === Number(numero_conta_destino);
     });
-    const senhaOrigem = contas.find((conta) => {
-        return conta.senha === senha;
-    });
+
+    if (!contaOrigem || contaOrigem.senha !== senha) {
+        return res.status(401).json({ mensagem: 'Senha incorreta ou conta de origem não encontrada!' });
+    };
 
     if (!numero_conta_origem || !numero_conta_destino || !valor || !senha) {
         return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios!' });
     }
 
-    if (senhaOrigem) { //CORRIGIR SENHA
-        return res.status(401).json({ mensagem: 'Senha incorreta!' });
-    }
-
     if (!contaOrigem || !contaDestino) {
-        return res.status(404).json({ mensagem: 'Conta não encontrada!' });
+        return res.status(404).json({ mensagem: 'Conta de origem ou conta de destino não encontrada!' });
     }
 
     if (contaOrigem.saldo < valor) {
         return res.status(400).json({ mensagem: 'Saldo insuficiente!' });
     }
 
-    const tranferencia = {
+    const transferencia = {
+        data: new Date().toLocaleString("pt-BR").replaceAll('/', '-'),
         numero_conta_origem,
         numero_conta_destino,
         valor,
         senha
     }
 
+    transferencias.push(transferencia);
+
     contaOrigem.saldo -= valor;
     contaDestino.saldo += valor;
 
-    return res.status(204).json(tranferencia);
+    return res.status(204).json(transferencia);
 }
 
 module.exports = {
