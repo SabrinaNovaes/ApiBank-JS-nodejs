@@ -1,6 +1,5 @@
 const express = require('express');
 const rotas = require('./routes');
-const validarSenha = require('./intermediadores');
 
 const app = express();
 

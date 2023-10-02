@@ -31,14 +31,13 @@ const criarConta = async (req, res) => {
 
 const atualizarUsuario = async (req, res) => {
     const { numeroConta } = req.params;
-
     const { nome, cpf, data_nascimento, telefone, email, senha } = req.body;
 
-    const conta = contas.find((conta) => {
-        return conta.numero === Number(numeroConta);
-    });
-
     try {
+        const conta = contas.find((conta) => {
+            return conta.numero === Number(numeroConta);
+        });
+
         conta.nome = nome;
         conta.cpf = cpf;
         conta.data_nascimento = data_nascimento;
@@ -55,15 +54,14 @@ const atualizarUsuario = async (req, res) => {
 const excluirConta = async (req, res) => {
     const { numeroConta } = req.params;
 
-    const conta = contas.find((conta) => {
-        return conta.numero === Number(numeroConta);
-    });
-
-    if (conta.saldo !== 0) {
-        return res.status(400).json({ mensagem: 'A conta só pode ser removida se o saldo for zero!' });
-    }
-
     try {
+        const conta = contas.find((conta) => {
+            return conta.numero === Number(numeroConta);
+        });
+    
+        if (conta.saldo !== 0) {
+            return res.status(400).json({ mensagem: 'A conta só pode ser removida se o saldo for zero!' });
+        }
         const index = contas.indexOf(conta);
         contas.splice(index, 1);
 
@@ -71,29 +69,30 @@ const excluirConta = async (req, res) => {
     } catch (error) {
         return res.status(400).json({ mensagem: error.message });
     }
-
 }
 
 const saldo = async (req, res) => {
     const { numero_conta, senha } = req.query;
-    const conta = contas.find((conta) => {
-        return conta.numero === Number(numero_conta);
-    });
 
     try {
+        const conta = contas.find((conta) => {
+            return conta.numero === Number(numero_conta);
+        });
+
         return res.status(200).json({ "saldo": conta.saldo });
     } catch (error) {
-        return res.status(400).json({ mensagem: error.message });
+        return res.status(500).json({ mensagem: error.message });
     }
 }
 
 const extrato = async (req, res) => {
     const { numero_conta, senha } = req.query;
-    const conta = contas.find((conta) => {
-        return conta.numero === Number(numero_conta);
-    });
 
     try {
+        const conta = contas.find((conta) => {
+            return conta.numero === Number(numero_conta);
+        });
+        
         const extrato = {
             depositos: depositos.filter((deposito) => {
                 return Number(deposito.numero_conta) === Number(conta.numero);
@@ -110,7 +109,7 @@ const extrato = async (req, res) => {
         }
         return res.status(200).json(extrato);
     } catch (error) {
-        return res.status(400).json({ mensagem: error.message });
+        return res.status(500).json({ mensagem: error.message });
     }
 }
 

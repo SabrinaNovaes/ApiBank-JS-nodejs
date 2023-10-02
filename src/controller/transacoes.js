@@ -2,17 +2,18 @@ const { contas, depositos, saques, transferencias } = require('../bancodedados')
 
 const depositar = async (req, res) => {
     const { numero_conta, valor } = req.body;
-    const conta = contas.find((conta) => {
-        return conta.numero === Number(numero_conta);
-    });
 
     try{
+        const conta = contas.find((conta) => {
+            return conta.numero === Number(numero_conta);
+        });
+
         if (!numero_conta || !valor) {
             return res.status(400).json({ menssagem: 'O número da conta e o valor são obrigatórios!' });
         }
     
         if (!conta) {
-            return res.status(404).json({ mensagem: "Conta não encontrada!" });
+            return res.status(404).json({ mensagem: "Conta bancária não encontrada!" });
         }
     
         if (valor <= 0) {
@@ -36,17 +37,18 @@ const depositar = async (req, res) => {
 
 const sacar = async (req, res) => {
     const { numero_conta, valor, senha } = req.body;
-    const conta = contas.find((conta) => {
-        return conta.numero === Number(numero_conta);
-    });
 
     try {
+        const conta = contas.find((conta) => {
+            return conta.numero === Number(numero_conta);
+        });
+
         if (!numero_conta || !valor || !senha) {
             return res.status(400).json({ mensagem: 'O número da conta, valor e a senha são obrigatórios!' });
         }
     
         if (!conta) {
-            return res.status(404).json({ mensagem: "Conta não encontrada!" });
+            return res.status(404).json({ mensagem: "Conta bancária não encontrada!" });
         }
     
         if (conta.saldo <= 0) {
@@ -77,15 +79,14 @@ const sacar = async (req, res) => {
 const transferir = async (req, res) => {
     const { numero_conta_origem, numero_conta_destino, valor, senha } = req.body;
 
-    const contaOrigem = contas.find((conta) => {
-        return conta.numero === Number(numero_conta_origem);
-    });
-
-    const contaDestino = contas.find((conta) => {
-        return conta.numero === Number(numero_conta_destino);
-    });
-
     try {
+        const contaOrigem = contas.find((conta) => {
+            return conta.numero === Number(numero_conta_origem);
+        });
+        const contaDestino = contas.find((conta) => {
+            return conta.numero === Number(numero_conta_destino);
+        });
+    
         if (!contaOrigem || contaOrigem.senha !== senha) {
             return res.status(401).json({ mensagem: 'Senha incorreta ou conta de origem não encontrada!' });
         };
