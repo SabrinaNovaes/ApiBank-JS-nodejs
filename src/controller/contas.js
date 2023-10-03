@@ -1,4 +1,4 @@
-const { contas, depositos, saques, transferencias } = require('../bancodedados');
+const { contas, depositos, saques, transferencias } = require('../bancodedados')
 
 let numero = 1;
 

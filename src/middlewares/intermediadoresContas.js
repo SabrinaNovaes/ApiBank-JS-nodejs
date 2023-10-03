@@ -1,4 +1,4 @@
-const { contas } = require('../bancodedados');
+const { contas } = require('../bancodedados')
 
 function verificarNumeroContaParams (req, res, next) {
     const { numeroConta } = req.params;

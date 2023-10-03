@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express')
 const { listarContas, criarConta, atualizarUsuario, excluirConta, saldo, extrato } = require('./controller/contas');
 const { depositar, sacar, transferir } = require('./controller/transacoes');
 const validarSenha = require('./middlewares/intermediarioValidarSenha');

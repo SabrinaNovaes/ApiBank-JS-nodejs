@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express')
 const rotas = require('./routes');
 
 const app = express();

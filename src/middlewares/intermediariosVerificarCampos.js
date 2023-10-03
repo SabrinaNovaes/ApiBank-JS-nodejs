@@ -1,4 +1,4 @@
-const { contas } = require('../bancodedados');
+const { contas } = require('../bancodedados')
 
 function verificarCampos (req, res, next) {
     const { nome, cpf, data_nascimento, telefone, email, senha } = req.body;
