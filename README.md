@@ -2,7 +2,7 @@
 Projeto de ApiRest de um banco, realizado no curso de Backend da CubosAcademy, consiste em criar endpoints de manipulação de contas de usuários e transações bancárias realizadas. Utiliza biblioteca express() e nodemon, feito em JavaScript com Node.JS
 
 ## :computer: Linguagens e Ferramentas
-![Skills](https://skillicons.dev/icons?i=nodejs,js,express)
+![Skills](https://skillicons.dev/icons?i=nodejs,js,express,nodemon)
 
 ## :red_circle: EndPoints Contas
 <img src="https://user-images.githubusercontent.com/107645697/272125436-75533497-ef6a-4b94-9dff-8bac45a31504.png" width="150px" />
